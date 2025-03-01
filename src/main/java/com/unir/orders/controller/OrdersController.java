@@ -1,5 +1,6 @@
 package com.unir.orders.controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import com.unir.orders.data.model.Order;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
