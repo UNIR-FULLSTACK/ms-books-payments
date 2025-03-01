@@ -13,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
 import java.util.List;
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = {"http://localhost:3000","https://relatos-de-papel-rho.vercel.app"})
 @RestController
 @RequiredArgsConstructor
 @Slf4j
