@@ -1,7 +1,9 @@
 package com.unir.orders.service;
 
+import com.unir.orders.data.BookJpaRepository;
 import com.unir.orders.data.OrderJpaRepository;
 import com.unir.orders.data.model.Order;
+import com.unir.orders.controller.model.OrderRequest;
 import com.unir.orders.facade.model.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,27 +12,30 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.unir.orders.facade.BooksFacade;
-import com.unir.orders.controller.model.OrderRequest;
-
 @Service
 public class OrdersServiceImpl implements OrdersService {
 
-  @Autowired //Inyeccion por campo (field injection). Es la menos recomendada.
-  private BooksFacade booksFacade;
+  @Autowired
+  private BookJpaRepository bookRepository;
 
-  @Autowired //Inyeccion por campo (field injection). Es la menos recomendada.
+  @Autowired
   private OrderJpaRepository repository;
 
   @Override
   public Order createOrder(OrderRequest request) {
+    // Buscar libros directamente en la base de datos local
+    List<Book> books = request.getBooks().stream()
+            .map(id -> bookRepository.findById(Long.valueOf(id)).orElse(null))
+            .filter(Objects::nonNull)
+            .filter(Book::getVisible)
+            .toList();
 
-    List<Book> books = request.getBooks().stream().map(booksFacade::getBook).filter(Objects::nonNull).toList();
-
-    if(books.size() != request.getBooks().size() || books.stream().anyMatch(book -> !book.getVisible())) {
+    if(books.size() != request.getBooks().size()) {
       return null;
     } else {
-      Order order = Order.builder().books(books.stream().map(Book::getId).collect(Collectors.toList())).build();
+      Order order = Order.builder()
+              .books(books.stream().map(Book::getId).collect(Collectors.toList()))
+              .build();
       repository.save(order);
       return order;
     }
