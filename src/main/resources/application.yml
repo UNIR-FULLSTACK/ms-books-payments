@@ -18,15 +18,18 @@ spring:
   application:
     name: ms-books-payments
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:mysql://yamanote.proxy.rlwy.net:16171/railway
+    username: root
+    password: AYXMTmRmbmeKsJYXCNDzXPWegMpzNNTS
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     show-sql: true
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-      settings:
-        web-allow-others: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
 
 ## Configuracion secundaria (custom)
 getBook:
